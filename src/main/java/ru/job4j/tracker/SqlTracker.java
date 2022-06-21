@@ -125,8 +125,9 @@ public class SqlTracker implements Store, AutoCloseable {
         return foundItem;
     }
 
-    private Item createItem (ResultSet resultSet) throws SQLException {
-        return new Item(resultSet.getInt("id"),
+    private Item createItem(ResultSet resultSet) throws SQLException {
+        return new Item(
+                resultSet.getInt("id"),
                 resultSet.getString("name"),
                 resultSet.getTimestamp("created").toLocalDateTime()
         );
