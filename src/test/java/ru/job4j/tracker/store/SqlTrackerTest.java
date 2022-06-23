@@ -56,15 +56,13 @@ public class SqlTrackerTest {
 
     @Test
     public void whenSaveItemAndFindByGeneratedIdThenMustBeTheSame() {
-        Item item = new Item("item");
-        tracker.add(item);
+        Item item = tracker.add(new Item("item"));
         assertThat(tracker.findById(item.getId()), is(item));
     }
 
     @Test
     public void whenAddAndDeleteThenFindByIdMustBeNull() {
-        Item item = new Item("item");
-        tracker.add(item);
+        Item item = tracker.add(new Item("item"));
         assertThat(tracker.findById(item.getId()), is(item));
         tracker.delete(item.getId());
         assertThat(tracker.findById(item.getId()), nullValue());
@@ -72,47 +70,32 @@ public class SqlTrackerTest {
 
     @Test
     public void whenAddAndReplaceThenMustBeSecondItem() {
-        Item item = new Item("item");
-        tracker.add(item);
+        Item item = tracker.add(new Item("item"));
         tracker.replace(item.getId(), new Item("replaced"));
         assertThat(tracker.findById(item.getId()).getName(), is("replaced"));
     }
 
     @Test
     public void whenAddTwoAndFindALLThenMustBeTwoItems() {
-        Item itemOne = new Item("itemOne");
-        Item itemTwo = new Item("itemTwo");
-        tracker.add(itemOne);
-        tracker.add(itemTwo);
-        List<Item> items = new ArrayList<>();
-        items.add(itemOne);
-        items.add(itemTwo);
-        assertThat(tracker.findAll(), is(items));
+        Item itemOne = tracker.add(new Item("itemOne"));
+        Item itemTwo = tracker.add(new Item("itemTwo"));
+        assertThat(tracker.findAll(), is(List.of(itemOne, itemTwo)));
     }
 
     @Test
     public void whenAddItemAndFindByNameThenMustBeTheSame() {
-        Item item = new Item("item");
-        tracker.add(item);
-        List<Item> expected = new ArrayList<>();
-        expected.add(item);
-        assertThat(tracker.findByName(item.getName()), is(expected));
+        Item item = tracker.add(new Item("item"));
+        assertThat(tracker.findByName("item"), is(List.of(item)));
     }
 
     @Test
     public void whenMultipleAddAndDeleteOneThenFindAllMustBeWithoutItem() {
-        Item itemOne = new Item("itemOne");
-        Item itemTwo = new Item("itemTwo");
-        Item itemThree = new Item("itemThree");
-        List<Item> expected = new ArrayList<>();
-        expected.add(itemOne);
-        expected.add(itemThree);
-        tracker.add(itemOne);
-        tracker.add(itemTwo);
-        tracker.add(itemThree);
-        assertNotEquals(tracker.findAll(), expected);
+        Item itemOne = tracker.add(new Item("itemOne"));
+        Item itemTwo = tracker.add(new Item("itemTwo"));
+        Item itemThree = tracker.add(new Item("itemThree"));
+        assertNotEquals(tracker.findAll(), List.of(itemOne, itemThree));
         tracker.delete(itemTwo.getId());
-        assertThat(tracker.findAll(), is(expected));
+        assertThat(tracker.findAll(), is(List.of(itemOne, itemThree)));
     }
 
 }
