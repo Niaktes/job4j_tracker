@@ -12,7 +12,7 @@ public class DeleteAllItems implements UserAction {
 
     private final Output out;
 
-    public DeleteAllItems(Output out){
+    public DeleteAllItems(Output out) {
         this.out = out;
     }
 
