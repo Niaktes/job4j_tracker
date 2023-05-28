@@ -9,7 +9,7 @@ public class MemTracker implements Store {
 
     private final List<Item> items = new ArrayList<>();
 
-    private int id = 0;
+    private int id = 1;
 
     public Item add(Item item) {
         item.setId(id++);
@@ -18,7 +18,7 @@ public class MemTracker implements Store {
     }
 
     public List<Item> findAll() {
-        return items;
+        return List.copyOf(items);
     }
 
     public Item findById(int id) {
@@ -38,21 +38,21 @@ public class MemTracker implements Store {
 
     public boolean replace(int id, Item item) {
         int index = indexOf(id);
-        if (index == -1) {
-            return false;
+        boolean result = index != -1;
+        if (result) {
+            item.setId(id);
+            items.set(index, item);
         }
-        item.setId(id);
-        items.set(index, item);
-        return true;
+        return result;
     }
 
     public boolean delete(int id) {
         int index = indexOf(id);
-        if (index == -1) {
-            return false;
+        boolean result = index != -1;
+        if (result) {
+            items.remove(index);
         }
-        items.remove(index);
-        return true;
+        return result;
     }
 
     private int indexOf(int id) {
