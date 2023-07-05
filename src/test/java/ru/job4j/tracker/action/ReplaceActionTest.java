@@ -38,6 +38,8 @@ public class ReplaceActionTest {
         tracker.add(new Item("Replaced item"));
         ReplaceAction replace = new ReplaceAction(out);
         Input input = mock(Input.class);
+        when(input.askInt(any(String.class))).thenReturn(0);
+        when(input.askStr(any(String.class))).thenReturn("-");
         replace.execute(input, tracker);
         String ln = System.lineSeparator();
         assertThat(out.toString(), is("=== Edit item ===" + ln + "Item with id = 0 not found" + ln));
