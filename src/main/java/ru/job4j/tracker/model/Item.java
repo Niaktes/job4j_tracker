@@ -2,51 +2,34 @@ package ru.job4j.tracker.model;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Objects;
-import lombok.Data;
+import lombok.*;
 
-@Data
+@RequiredArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Item {
 
     private static final DateTimeFormatter FORMATTER =
             DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
 
+    @Getter
+    @Setter
+    @EqualsAndHashCode.Include
     private int id;
 
+    @Getter
+    @Setter
+    @NonNull
+    @EqualsAndHashCode.Include
     private String name;
 
+    @Getter
+    @Setter
     private LocalDateTime created = LocalDateTime.now();
-
-    public Item(String name) {
-        this.name = name;
-    }
-
-    public Item(int id, String name, LocalDateTime created) {
-        this.id = id;
-        this.name = name;
-        this.created = created;
-    }
 
     @Override
     public String toString() {
         return String.format("id: %s, name: %s, created: %s", id, name, FORMATTER.format(created));
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        Item item = (Item) o;
-        return Objects.equals(id, item.id) && Objects.equals(name, item.name);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name);
     }
 
 }
