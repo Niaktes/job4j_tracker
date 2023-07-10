@@ -38,14 +38,9 @@ public class HbmTracker implements Store, AutoCloseable {
         boolean result = false;
         try (session) {
             session.beginTransaction();
-            int lines = session.createQuery("UPDATE Item SET name = :iName, created = :iCreated "
-                    + "WHERE id = :iId")
-                    .setParameter("iName", item.getName())
-                    .setParameter("iCreated", item.getCreated())
-                    .setParameter("iId", id)
-                    .executeUpdate();
+            session.update(item);
             session.getTransaction().commit();
-            result = lines > 0;
+            result = true;
         } catch (HibernateException e) {
             session.getTransaction().rollback();
             e.printStackTrace();
