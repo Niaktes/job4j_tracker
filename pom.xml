@@ -8,17 +8,29 @@
   <artifactId>job4j_tracker</artifactId>
   <version>1.0-SNAPSHOT</version>
   <properties>
+    <java.version>17</java.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <maven.compiler.source>17</maven.compiler.source>
     <maven.compiler.target>17</maven.compiler.target>
     <maven.compiler.release>17</maven.compiler.release>
+    <!--suppress UnresolvedMavenProperty -->
+    <docker.db.url.jdbc>${JDBC_URL}</docker.db.url.jdbc>
+    <!--suppress UnresolvedMavenProperty -->
+    <docker.db.username.jdbc>${JDBC_USERNAME}</docker.db.username.jdbc>
+    <!--suppress UnresolvedMavenProperty -->
+    <docker.db.password.jdbc>${JDBC_PASSWORD}</docker.db.password.jdbc>
+    <!--suppress UnresolvedMavenProperty -->
+    <docker.db.driver.jdbc>${JDBC_DRIVER}</docker.db.driver.jdbc>
   </properties>
   <profiles>
     <profile>
       <id>test</id>
       <properties>
-        <liquibase.config>db/liquibase_test.properties</liquibase.config>
+        <liquibase.changeLogFile>db/dbchangelog_test.xml</liquibase.changeLogFile>
+        <liquibase.url>jdbc:h2:./testdb;MODE=PostgreSQL;CASE_INSENSITIVE_IDENTIFIERS=TRUE;</liquibase.url>
+        <liquibase.username></liquibase.username>
+        <liquibase.password></liquibase.password>
       </properties>
       <activation>
         <activeByDefault>true</activeByDefault>
@@ -27,7 +39,19 @@
     <profile>
       <id>production</id>
       <properties>
-        <liquibase.config>db/liquibase.properties</liquibase.config>
+        <liquibase.changeLogFile>db/dbchangelog.xml</liquibase.changeLogFile>
+        <liquibase.url>jdbc:postgresql://127.0.0.1:5432/tracker</liquibase.url>
+        <liquibase.username>postgres</liquibase.username>
+        <liquibase.password>1234</liquibase.password>
+      </properties>
+    </profile>
+    <profile>
+      <id>docker</id>
+      <properties>
+        <liquibase.changeLogFile>db/dbchangelog.xml</liquibase.changeLogFile>
+        <liquibase.url>${docker.db.url.jdbc}</liquibase.url>
+        <liquibase.username>${docker.db.username.jdbc}</liquibase.username>
+        <liquibase.password>${docker.db.password.jdbc}</liquibase.password>
       </properties>
     </profile>
   </profiles>
@@ -158,7 +182,10 @@
         <artifactId>liquibase-maven-plugin</artifactId>
         <version>4.15.0</version>
         <configuration>
-          <propertyFile>${liquibase.config}</propertyFile>
+          <changeLogFile>${liquibase.changeLogFile}</changeLogFile>
+          <url>${liquibase.url}</url>
+          <username>${liquibase.username}</username>
+          <password>${liquibase.password}</password>
         </configuration>
         <executions>
           <execution>
