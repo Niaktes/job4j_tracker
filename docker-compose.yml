@@ -1,5 +1,6 @@
 version: "3.9"
 services:
+
   db:
     image: postgres
     container_name: db
@@ -11,6 +12,7 @@ services:
     volumes:
       - ./db/shortcut/data:/var/lib/postgresql/data
     restart: always
+
   lb:
     build:
       context: .
@@ -23,6 +25,7 @@ services:
     container_name: lb
     depends_on:
       - db
+
   job4j_tracker:
     build:
       context: .

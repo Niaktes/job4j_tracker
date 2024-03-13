@@ -29,3 +29,6 @@ target
 out
 .idea/
 *.iml
+/db/shortcut
+
+/dependency-reduced-pom.xml
